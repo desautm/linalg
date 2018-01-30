@@ -26,7 +26,7 @@ echange_ligne <- function(A, apartir, jusqua){
 #' Cette opération correspond à multiplier la ligne i par une constante C1 et 
 #' à lui additionner la ligne j multipliée par une constante C2
 #' 
-#' @param A une matrice, possiblement une matrice augmentée pour la résoultion d'un SEL ou pour trouver l'inverse d'une matrice
+#' @param A une matrice, possiblement une matrice augmentée pour la résolution d'un SEL ou pour trouver l'inverse d'une matrice
 #' @param apartir est le numéro de la première ligne
 #' @param mult1 est le multiple de la première ligne
 #' @param jusqua est le numéro de la deuxième ligne
