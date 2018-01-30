@@ -40,7 +40,7 @@ print_matrix_augm <- function(A, sel = TRUE, crochets = TRUE, fractions = FALSE,
   if (sel)
     ret <- xtable::xtableMatharray(ret, digits = digits, align = c(rep("r",ncol(A)),"|","r"), ...)
   else
-    ret <- xtable::xtableMatharray(A, digits = digits, align = c(rep("r",ncol(A)/2+1),"|",rep("r",ncol(A)/2)), ...)
+    ret <- xtable::xtableMatharray(ret, digits = digits, align = c(rep("r",ncol(A)/2+1),"|",rep("r",ncol(A)/2)), ...)
   if (crochets)
     cat('\\left[\n')
   else
