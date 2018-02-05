@@ -76,7 +76,7 @@ printMat <- function(A,
 }
 
 #' Affiche la fraction sous forme "\frac{}{}"
-dfrac <- function(x){
+dfrac <- function(x, oper = FALSE){
   n <- fractional::numerators(x)
   d <- fractional::denominators(x)
   temp <- n
@@ -86,7 +86,15 @@ dfrac <- function(x){
     }
     else{
       if (d[i] == 1){
-        temp[i] <- n[i]
+        if (n[i] == 1 && oper){
+          temp[i] <- ""
+        }
+        else if (n[i] == -1 && oper){
+          temp[i] <- "-"
+        }
+        else{
+          temp[i] <- n[i]
+        }
       }
       else{
         if (n[i] > 0){

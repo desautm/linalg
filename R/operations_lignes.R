@@ -38,7 +38,7 @@ echange_ligne <- function(A, apartir, jusqua){
 mult_ligne <- function(A, apartir, mult){
   if (!is.numeric(A) || !is.matrix(A)) stop("A doit être une matrice numérique")
   B <- A
-  B[apartir,] <- A[apartir,]/mult
+  B[apartir,] <- A[apartir,]*mult
   B
 }
 

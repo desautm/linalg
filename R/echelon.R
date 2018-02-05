@@ -27,7 +27,7 @@ echelon <- function(A,
   cat("\\begin{align*}\n")
   cat("& \\phantom{\\sim} ")
   printMat(A, fractions = fractions, digits = digits, align = align)
-  cat("\\\\\n")
+  #cat("\\\\\n")
   
   i <- 1
   j <- 1
@@ -37,6 +37,7 @@ echelon <- function(A,
     currentColumn[(1:row) <= i] <- 0
     which <- which.max(abs(currentColumn))
     pivot <- currentColumn[which]
+    oper <- matrix(0, nrow(A), 2)
     # Colonne avec pivot égal à zéro
     if (abs(A[i, j]) <= tol){
       # Colonne avec des zéros sous le pivot
@@ -47,19 +48,25 @@ echelon <- function(A,
       # Colonne avec des nombres différents de zéro sous le pivot
       else{
         A <- echange_ligne(A, i, which)
+        oper[i, 1] <- which
+        oper[which, 1] <- i
+        printOperations(oper, method = "echange")
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        cat("\\\\\n")
+        #cat("\\\\\n")
       }
     }
     # Colonne où le pivot n'est pas zéro
     else{
       # Si vraie méthode de Gauss et pivot différent de 1, on change le pivot à 1
       if (gauss && abs(A[i, j] - 1) > tol){
-        A <- mult_ligne(A, i, A[i, j])
+        oper[i, 1] <- 1/A[i, j]
+        printOperations(oper, method = "reduit")
+        oper <- matrix(0, nrow(A), 2)
+        A <- mult_ligne(A, i, 1/A[i, j])
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        cat("\\\\\n")
+        #cat("\\\\\n")
       }
       # La colonne possède des zéros sous le pivot
       if (abs(pivot) <= tol){
@@ -72,7 +79,16 @@ echelon <- function(A,
         while (k <= row){
           # Si vraie méthode de Gauss, le pivot est égal à 1
           if (gauss){
-            A <- oper_ligne(A, i, A[k,j], k, -1)
+            oper[k, 1] <- abs(A[k, j])
+            if (A[k, j] > 0){
+              A <- oper_ligne(A, i, A[k,j], k, -1)
+              oper[k, 2] <- -1
+            }
+            else{
+              A <- oper_ligne(A, i, abs(A[k,j]), k, 1)
+              oper[k, 2] <- 1
+            }
+            
           }
           # Sinon on doit trouver le plus petit commun multiple
           else{
@@ -80,14 +96,25 @@ echelon <- function(A,
             # Si le plus petit commun multiple n'est pas zéro
             # On fait des opérations sur les lignes
             if (abs(lowestCM) > tol){
-              A <- oper_ligne(A, i, lowestCM/A[i, j], k, -lowestCM/A[k, j])
+              M1 <- abs(lowestCM/A[i, j])
+              M2 <- abs(lowestCM/A[k, j])
+              oper[k, 1] <- M1
+              if (lowestCM > 0){
+                A <- oper_ligne(A, i, M1, k, -M2)
+                oper[k, 2] <- -M2
+              }
+              else{
+                A <- oper_ligne(A, i, M1, k, M2)
+                oper[k, 2] <- M2
+              }
             }
           }
           k <- k + 1
         }
+        printOperations(oper, pivot = i, method = "combinaison")
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        cat("\\\\\n")
+        #cat("\\\\\n")
       }
       i <- i + 1
       j <- j + 1
