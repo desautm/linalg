@@ -12,6 +12,7 @@
 #' @param fractions logique; si \code{TRUE}, essaie d'exprimer les nombres non-entiers sous forme rationnelle.
 #' @param crochets logique; si \code{TRUE}, affichage de la matrice entre crochets, si \code{FALSE}, affichage de la matrice entre parenthèses.
 #' @param digits; permet de choisir le nombre de chiffres à droite de la virgule lors de l'affichage
+#' @param align; permet de choisir le nombre de colonnes des constantes dans la matrice augmentée
 #' @importFrom fractional numerators
 #' @importFrom fractional denominators
 #' @author Marc-André Désautels
@@ -31,18 +32,22 @@
 #' printMat(A/7, fractions = TRUE)
 #' printMat(B, sel = FALSE)
 #' printMat(cbind(A,diag(ncol(A))), sel = FALSE)
-printMat <- function(A, digits = 2, fractions = FALSE, crochets = TRUE, sel = TRUE){
-  if (!sel && (ncol(A) %% 2 != 0)) stop("Le nombre de colonnes de A doit etre pair lors de l'inversion d'une matrice.")
+printMat <- function(A, 
+                     digits = 2, 
+                     fractions = FALSE, 
+                     crochets = TRUE, 
+                     align = 0){
+  if (!missing(align) && (ncol(A) %% 2 != 0)) stop("Le nombre de colonnes de A doit etre pair lors de l'inversion d'une matrice.")
   if (crochets)
     cat('\\left[\n')
   else
     cat('\\left(\n')
   cat('\\begin{array}{')
-  if (sel){
-    align <- c(rep('r',ncol(A)-1),'|r')
+  if (!missing(align)){
+    align <- c(rep('r',ncol(A)-align),'|',rep('r',align))
   }
   else{
-    align <- c(rep('r',ncol(A)/2),'|',rep('r',ncol(A)/2))
+    align <- c(rep('r',ncol(A)))
   }
   cat(align, collapse = "", sep = "")
   cat('}')

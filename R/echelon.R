@@ -16,7 +16,9 @@ echelon <- function(A,
   if ((!is.matrix(A)) || (!is.numeric(A)))
     stop("Argument doit être une matrice numérique")
   row <- nrow(A)
+  align <- ncol(A)
   if (!missing(B)){
+    align <- ncol(B)
     if (!(nrow(B) == nrow(A)) || !is.numeric(B) || !(is.matrix(B)))
       stop("Argument doit être une matrice numérique et doit avoir le même nombre de colonnes que A")
   }
@@ -24,7 +26,7 @@ echelon <- function(A,
   col <- ncol(A)
   cat("\\begin{align*}\n")
   cat("& \\phantom{\\sim} ")
-  printMat(A, fractions = fractions, digits = digits)
+  printMat(A, fractions = fractions, digits = digits, align = align)
   cat("\\\\\n")
   
   i <- 1
@@ -46,7 +48,7 @@ echelon <- function(A,
       else{
         A <- echange_ligne(A, i, which)
         cat("& \\sim ")
-        printMat(A, fractions = fractions, digits = digits)
+        printMat(A, fractions = fractions, digits = digits, align = align)
         cat("\\\\\n")
       }
     }
@@ -56,7 +58,7 @@ echelon <- function(A,
       if (gauss && abs(A[i, j] - 1) > tol){
         A <- mult_ligne(A, i, A[i, j])
         cat("& \\sim ")
-        printMat(A, fractions = fractions, digits = digits)
+        printMat(A, fractions = fractions, digits = digits, align = align)
         cat("\\\\\n")
       }
       # La colonne possède des zéros sous le pivot
@@ -84,7 +86,7 @@ echelon <- function(A,
           k <- k + 1
         }
         cat("& \\sim ")
-        printMat(A, fractions = fractions, digits = digits)
+        printMat(A, fractions = fractions, digits = digits, align = align)
         cat("\\\\\n")
       }
       i <- i + 1
