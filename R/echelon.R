@@ -15,7 +15,11 @@ echelon <- function(A,
   
   if ((!is.matrix(A)) || (!is.numeric(A)))
     stop("Argument doit être une matrice numérique")
+  if (missing(B) && nrow(A) != ncol(A)){
+    stop("La matrice doit être carrée pour l'inverser")
+  }
   row <- nrow(A)
+  pivotCol <- ncol(A)
   align <- ncol(A)
   if (!missing(B)){
     align <- ncol(B)
@@ -53,7 +57,6 @@ echelon <- function(A,
         printOperations(oper, method = "echange")
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        #cat("\\\\\n")
       }
     }
     # Colonne où le pivot n'est pas zéro
@@ -66,7 +69,6 @@ echelon <- function(A,
         A <- mult_ligne(A, i, 1/A[i, j])
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        #cat("\\\\\n")
       }
       # La colonne possède des zéros sous le pivot
       if (abs(pivot) <= tol){
@@ -81,14 +83,12 @@ echelon <- function(A,
           if (gauss){
             oper[k, 1] <- abs(A[k, j])
             if (A[k, j] > 0){
-              A <- oper_ligne(A, i, A[k,j], k, -1)
               oper[k, 2] <- -1
             }
             else{
-              A <- oper_ligne(A, i, abs(A[k,j]), k, 1)
               oper[k, 2] <- 1
             }
-            
+            A <- oper_ligne(A, i, A[k,j], k, 1)
           }
           # Sinon on doit trouver le plus petit commun multiple
           else{
@@ -96,17 +96,14 @@ echelon <- function(A,
             # Si le plus petit commun multiple n'est pas zéro
             # On fait des opérations sur les lignes
             if (abs(lowestCM) > tol){
-              M1 <- abs(lowestCM/A[i, j])
-              M2 <- abs(lowestCM/A[k, j])
-              oper[k, 1] <- M1
+              oper[k, 1] <- abs(lowestCM/A[i, j])
               if (lowestCM > 0){
-                A <- oper_ligne(A, i, M1, k, -M2)
-                oper[k, 2] <- -M2
+                oper[k, 2] <- -abs(lowestCM/A[k, j])
               }
               else{
-                A <- oper_ligne(A, i, M1, k, M2)
-                oper[k, 2] <- M2
+                oper[k, 2] <- abs(lowestCM/A[k, j])
               }
+              A <- oper_ligne(A, i, lowestCM/A[i, j], k, lowestCM/A[k, j])
             }
           }
           k <- k + 1
@@ -114,7 +111,6 @@ echelon <- function(A,
         printOperations(oper, pivot = i, method = "combinaison")
         cat("& \\sim ")
         printMat(A, fractions = fractions, digits = digits, align = align)
-        #cat("\\\\\n")
       }
       i <- i + 1
       j <- j + 1
@@ -123,10 +119,12 @@ echelon <- function(A,
   
   cat("\\end{align*}\n")
   
-  if (missing(B)){
-    return(A[, (col/2+1):col])
-  }
-  else{
-    return(A)
-  }
+  return(findPivot(A,pivotCol))
+  
+  # if (missing(B)){
+  #   return(A[, (col/2+1):col])
+  # }
+  # else{
+  #   return(A)
+  # }
 }

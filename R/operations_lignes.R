@@ -59,6 +59,11 @@ mult_ligne <- function(A, apartir, mult){
 oper_ligne <- function(A, apartir, mult1, jusqua, mult2){
   if (!is.numeric(A) || !is.matrix(A)) stop("A doit être une matrice numérique")
   B <- A
-  B[jusqua,] <- mult1*A[apartir,]+mult2*A[jusqua,]
+  if (mult1 * mult2 > 0){
+    B[jusqua,] <- abs(mult1)*A[apartir,]-abs(mult2)*A[jusqua,]
+  }
+  else{
+    B[jusqua,] <- abs(mult1)*A[apartir,]+abs(mult2)*A[jusqua,]
+  }
   B
 }

@@ -37,7 +37,7 @@ printMat <- function(A,
                      fractions = FALSE, 
                      crochets = TRUE, 
                      align = 0){
-  if (!missing(align) && (ncol(A) %% 2 != 0)) stop("Le nombre de colonnes de A doit etre pair lors de l'inversion d'une matrice.")
+  #if (!missing(align) && (ncol(A) %% 2 != 0)) stop("Le nombre de colonnes de A doit etre pair lors de l'inversion d'une matrice.")
   if (crochets)
     cat('\\left[\n')
   else
